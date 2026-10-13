@@ -1,0 +1,22 @@
+# Local environment and credentials
+.env
+.env.*
+!.env.example
+**/application-local.yaml
+
+# Build and runtime output
+backend/.gradle/
+backend/.gradle-cache/
+backend/build/
+backend/bin/
+backend/out/
+frontend/node_modules/
+frontend/dist/
+
+# IDE and OS files
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.iml
+.DS_Store
+Thumbs.db

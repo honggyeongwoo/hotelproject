@@ -1,0 +1,13 @@
+node_modules
+dist
+build
+.gradle
+package-lock.json
+backend/build/
+backend/bin/
+frontend/dist/
+frontend/node_modules/
+backend/build/
+backend/bin/
+frontend/dist/
+frontend/node_modules/

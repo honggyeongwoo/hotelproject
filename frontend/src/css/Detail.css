@@ -1,0 +1,159 @@
+/* src폴더 안에 css 폴더를 만들고 그 안에 Detail.css 
+   실무에서는 각각 작은 모듈 조각 느낌
+   Detail.module.css
+*/
+.total-detail {
+  position: relative;
+}
+
+.detail-page {
+  display: flex;
+
+  /* 너비를 튀어나간 부분은 안보이게 하겠다 */
+  overflow: hidden;
+
+  margin-top: 1rem;
+}
+
+.detail-page li {
+  list-style: none;
+}
+
+.detail-page img {
+  width: 300px;
+  height: 300px;
+}
+
+/* 다음버튼 디자인 */
+.next-btn {
+  width: 70px;
+  height: 70px;
+
+  position: absolute;
+  top: 130px;
+  right: -35px;
+
+  border: none;
+  border-radius: 100%;
+}
+
+.detail-info {
+  width: 100%;
+  max-width: 1200px;
+  margin: 2rem 0;
+  color: #222;
+}
+
+.detail-info-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.detail-info-type {
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  background: var(--primary);
+  color: #fff;
+  font-size: 0.875rem;
+}
+
+.detail-info-favorite {
+  border: 0;
+  background: transparent;
+  color: #777;
+  cursor: pointer;
+  font-size: 1.75rem;
+}
+
+.detail-info-favorite.is-favorite {
+  color: #e34b61;
+}
+
+.detail-info-name {
+  margin: 0.75rem 0 0.25rem;
+}
+
+.detail-info-location,
+.detail-info-address {
+  margin: 0.25rem 0;
+  color: #666;
+}
+
+.detail-info-rating {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  margin: 1rem 0;
+}
+
+.detail-info-rating span:first-child {
+  color: #d99000;
+  font-weight: 700;
+}
+
+.detail-info-price {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 1.25rem 0;
+}
+
+.detail-info-discount {
+  display: flex;
+  gap: 0.5rem;
+  color: #777;
+}
+
+.detail-info-discount span {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.detail-info-price h2 {
+  margin: 0.25rem 0;
+}
+
+.detail-info-amenities {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 1.5rem 0;
+  padding: 0;
+  list-style: none;
+}
+
+.detail-info-amenities li {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  background: #f2f2f2;
+  color: #888;
+}
+
+.detail-info-amenities li.is-available {
+  background: #eef7f2;
+  color: var(--primary);
+}
+
+.detail-info-description {
+  margin-top: 2rem;
+}
+
+.detail-info-description p {
+  line-height: 1.7;
+  white-space: pre-wrap;
+}
+
+@media (max-width: 600px) {
+  .detail-info {
+    margin: 1.5rem 1rem;
+  }
+
+  .detail-info-amenities {
+    grid-template-columns: 1fr;
+  }
+}

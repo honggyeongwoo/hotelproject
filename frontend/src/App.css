@@ -1,0 +1,374 @@
+/* 자주 사용되는 공통색상 */
+:root {
+  --primary: #ff5a6e;
+  --primary-light: #fff0f2;
+  --text: #222222;
+  --text-sub: #777777;
+  --bg-gray: #f5f6f8;
+  --border: #e5e7eb;
+  --radius: 12px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+
+  box-sizing: border-box;
+}
+
+.main {
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: #ffffff;
+}
+
+.cancellationDivider {
+  margin: 10px 0;
+}
+
+.locationDivider {
+  margin: 10px 0;
+}
+
+.locationTitle {
+  margin: 10px 0;
+}
+
+.locationMapPlaceholder {
+  display: grid;
+  aspect-ratio: 16 / 9;
+  place-items: center;
+  background-color: var(--bg-gray);
+  color: var(--text-sub);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+}
+
+.logo,
+.menu a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.logo {
+  color: var(--primary);
+  font-size: 36px;
+  font-weight: 700;
+}
+
+.menu {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.login {
+  border: 1px solid #ccc;
+  padding: 8px 16px;
+  border-radius: 1rem;
+}
+
+.hero {
+  width: 100%;
+  height: 480px;
+  background-image: url("https://images.unsplash.com/photo-1623718649591-311775a30c43?auto=format&fit=crop&w=1600&q=80");
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  color: #ffffff;
+}
+
+.hero h1 {
+  font-size: 60px;
+  text-align: center;
+}
+
+.heroSubtitle {
+  color: #ffffff;
+  font-size: 30px;
+  text-align: center;
+}
+
+.heroSearch {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: min(900px, calc(100% - 48px));
+  margin-top: 12px;
+  padding: 12px;
+  border-radius: 10px;
+  background-color: #ffffff;
+}
+
+.searchField {
+  flex: 1;
+  min-width: 0;
+}
+
+.searchField p {
+  margin-bottom: 6px;
+  color: var(--text-sub);
+  font-size: 14px;
+}
+
+.searchField select,
+.searchField input {
+  width: 100%;
+  padding: 12px;
+  border: 0;
+  background-color: #ffffff;
+  color: var(--text);
+  font: inherit;
+}
+
+.heroSearch button {
+  padding: 12px 24px;
+  border: 0;
+  border-radius: 6px;
+  background-color: var(--primary);
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.categoryTabs {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  padding: 24px 0;
+}
+
+.categoryTab {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  max-width: 180px;
+  height: 88px;
+  border: 0;
+  border-radius: 16px;
+  background-color: var(--bg-gray);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.categoryTabActive {
+  background-color: var(--primary-light);
+}
+
+.categoryIcon {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.popularSection {
+  padding: 32px 0;
+}
+
+.regionSection {
+  padding: 32px 0;
+}
+
+.popularSection > p {
+  margin-top: 8px;
+  color: var(--text-sub);
+}
+
+.popularList {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+  margin-top: 24px;
+  list-style: none;
+}
+
+.popularCard {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background-color: #ffffff;
+}
+
+.popularImageWrap {
+  position: relative;
+}
+
+.popularImageWrap img {
+  display: block;
+  width: 100%;
+  height: 150px;
+  border-radius: 16px 16px 0 0;
+  object-fit: cover;
+}
+
+.discountBadge {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background-color: var(--primary);
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.favoriteButton {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background-color: #ffffff;
+  color: var(--primary);
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.popularCardContent {
+  padding: 16px;
+}
+
+.popularLocation,
+.popularRating {
+  color: var(--text-sub);
+  font-size: 14px;
+}
+
+.popularCard h3 {
+  margin-top: 8px;
+  color: var(--text);
+  font-size: 18px;
+}
+
+.popularRating {
+  margin-top: 8px;
+}
+
+.popularPrice {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.popularPrice del {
+  color: var(--text-sub);
+  font-size: 14px;
+}
+
+.popularPrice strong {
+  color: var(--text);
+  font-size: 20px;
+}
+
+.popularCardContent small {
+  display: block;
+  margin-top: 4px;
+  color: var(--text-sub);
+}
+
+.regionList {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-top: 24px;
+  list-style: none;
+}
+
+.regionCard img {
+  display: block;
+  width: 100%;
+  height: 130px;
+  border-radius: 16px;
+  object-fit: cover;
+  transition: filter 0.2s ease, transform 0.2s ease;
+}
+
+.regionCard:hover img {
+  filter: brightness(0.9);
+  transform: scale(1.02);
+}
+
+.regionCard figcaption {
+  margin-top: 8px;
+  font-size: 14px;
+}
+
+@media (max-width: 1199px) {
+  .popularList {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .popularList {
+    grid-template-columns: 1fr;
+  }
+
+  .regionList {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.footer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 32px;
+  background-color: var(--bg-gray);
+}
+
+.footer h2 {
+  color: var(--text);
+  font-size: 18px;
+}
+
+.footer > p,
+.footer address,
+.footer small {
+  color: var(--text-sub);
+}
+
+.footerNav ul {
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+}
+
+.footerNav li + li::before {
+  content: "·";
+  margin: 0 10px;
+  color: var(--text-sub);
+}
+
+.footerNav a {
+  color: var(--text);
+  text-decoration: none;
+}
+
+.footer address {
+  font-size: 13px;
+  font-style: normal;
+}
+
+.footer small {
+  font-size: 12px;
+}
