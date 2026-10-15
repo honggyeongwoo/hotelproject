@@ -8,9 +8,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.Getter;
+import lombok.ToString;
 
 // 숙소에 관련된 이미지들만 모아놓는 클래스!
-
+@ToString // 클래스변수들을 문자로 출력해준다.
 @Getter
 @Entity
 public class AccommodationImage {

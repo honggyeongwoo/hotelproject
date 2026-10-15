@@ -7,7 +7,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
+import lombok.ToString;
 
+@ToString // 클래스변수들을 문자로 출력해준다.
 @Getter // 데이터를 꺼낼갈수있도록 Getter를 생성해준다.
 @Entity
 @Table(name = "accommodation")

@@ -3,6 +3,8 @@ import "./App.css";
 import { Link, Route, Routes } from "react-router-dom";
 import Detail from "./components/Detail";
 import Compare from "./components/compare/Compare";
+import Login from "./components/Login";
+import Mypage from "./components/Mypage";
 
 // 인기 지역
 const REGIONS = [
@@ -41,27 +43,11 @@ function App() {
 
   useEffect(() => {
     fetch("http://localhost:8080/")
-      .then((res) => {
-        if (!res.ok) throw new Error(`숙소 목록 조회 실패: ${res.status}`);
-        return res.json();
-      })
-      .then(async (data) => {
-        const withImages = await Promise.all(
-          data.map(async (hotel) => {
-            if (hotel.imageUrl) return hotel;
-
-            const detailResponse = await fetch(
-              `http://localhost:8080/detail/${hotel.id}`,
-            );
-            if (!detailResponse.ok) return hotel;
-
-            const detail = await detailResponse.json();
-            return { ...hotel, imageUrl: detail.이미지들?.[0] ?? "" };
-          }),
-        );
-        setHotels(withImages);
-      })
-      .catch((error) => console.error("숙소 정보를 불러오지 못했습니다.", error));
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("응답: " + data);
+        setHotels(data);
+      });
   }, []);
   return (
     <div className="main">
@@ -73,9 +59,9 @@ function App() {
           <a href="#">국내숙소</a>
           <a href="#">해외숙소</a>
           <a href="#">특가</a>
-          <a className="login" href="#">
+          <Link className="login" to="/login">
             로그인
-          </a>
+          </Link>
         </nav>
       </header>
 
@@ -232,6 +218,8 @@ function App() {
 
         <Route path="/detail/:id" element={<Detail />} />
         <Route path="/compare" element={<Compare />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/mypage" element={<Mypage />} />
       </Routes>
 
       <footer className="footer">

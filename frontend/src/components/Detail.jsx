@@ -21,7 +21,7 @@ export default function Detail() {
   const [hotel, setHotel] = useState(null);
 
   // 이미지는 이미지대로 따로! 저장하는 변수
-  const [image, setImage] = useState([]);
+  const [image, setImage] = useState(null);
 
   useEffect(() => {
     // 1. 스프링부트한테 통신 fetch(url)
@@ -32,7 +32,7 @@ export default function Detail() {
         setHotel(data.숙소정보);
         setImage(data.이미지들);
       }); //받은데이터를 변수에저장
-  }, [id]);
+  }, []);
 
   // 데이터가 오기 전에 화면을 그리려고 할 수있다.
   if (!hotel) return <p>불러오는 중...</p>;

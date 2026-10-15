@@ -72,7 +72,7 @@ public class AccommodationService {
         return new AccommodationDetailDto(하나숙소, 이미지URL들);
     }
 
-    public void compare(List<Long> ids) {
+    public List<AccommodationDetailDto> compare(List<Long> ids) {
         // 한꺼번에 디비에서 찾아서 결과를 반환해준다.
         // 단점 : 순서보장이 없다!
         accommodationRepository.findAllById(ids);
@@ -93,15 +93,19 @@ public class AccommodationService {
             System.out.println("숙소정보: " + 숙소정보한건);
             System.out.println("숙소이미지: " + 숙소이미지한건);
             System.out.println();
-            // 결과.add();
+
+            AccommodationDetailDto 보낼결과 = new AccommodationDetailDto();
+            보낼결과.set숙소정보(숙소정보한건);
+            보낼결과.get이미지들()
+                    .add(숙소이미지한건.getImageUrl());
+
+            결과.add(보낼결과);
         }
         // 1. 이미지도 같이 가져와야된다.
-
         // 2. 어떤 dto 넣어서 보낼지.
-
         // 3. 반환 타입 -> 컨트롤러한테 보낸다.
-
         // 4. 예외처리를 어떻게 할까? 어떤 예외가 있을까? 고민!
+        return 결과;
     }
 }
 /*
