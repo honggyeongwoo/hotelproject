@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import '../../css/Compare.css';
+import CompareCard from './CompareCard';
 
 export default function Compare() {
   const [initialRequest] = useState(() => {
@@ -67,17 +68,11 @@ export default function Compare() {
       )}
       <div className="compareGrid">
         {accommodations.map(({ 숙소정보, 이미지들 }) => (
-          <article className="compareCard" key={숙소정보.id}>
-            {이미지들?.[0] && (
-              <img src={이미지들[0]} alt={숙소정보.name} />
-            )}
-            <div className="compareCardContent">
-              <h3>{숙소정보.name}</h3>
-              <p>{숙소정보.city} · {숙소정보.district}</p>
-              <p>{숙소정보.originalPrice.toLocaleString()}원</p>
-              <p>평점 {숙소정보.rating} · 리뷰 {숙소정보.reviewCount}개</p>
-            </div>
-          </article>
+          <CompareCard
+            key={숙소정보.id}
+            accommodation={숙소정보}
+            images={이미지들}
+          />
         ))}
       </div>
     </main>

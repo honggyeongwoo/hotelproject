@@ -1,7 +1,7 @@
 .comparePage {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 32px 24px;
+  padding: 20px;
   color: var(--text);
 }
 
@@ -25,26 +25,45 @@
 
 .compareCard {
   min-height: 320px;
+  min-width: 0;
+  padding: 20px;
   border: 1px solid var(--border);
   border-radius: var(--radius);
   overflow: hidden;
   background: #ffffff;
 }
 
+.compareCard > h3 {
+  margin: 0 0 12px;
+  overflow-wrap: anywhere;
+}
+
 .compareCard > img {
   display: block;
   width: 100%;
+  max-width: 100%;
   aspect-ratio: 800 / 533;
+  border-radius: 15px;
   object-fit: cover;
 }
 
 .compareCardContent {
-  padding: 16px;
+  padding-top: 16px;
+  overflow-wrap: anywhere;
 }
 
 .compareCardContent h3,
 .compareCardContent p {
-  margin: 0 0 8px;
+  margin: 10px 0;
+}
+
+.compareCardContent .compareCardPrice {
+  margin: 0;
+}
+
+.compareDiscountedPrice {
+  color: var(--primary);
+  font-size: 25px;
 }
 
 .compareSaveInfo {

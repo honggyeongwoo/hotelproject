@@ -1,9 +1,11 @@
 package com.yosai.backend.controller;
 
 import com.yosai.backend.dto.AccommodationDetailDto;
+import com.yosai.backend.dto.AccommodationSummaryDto;
+import com.yosai.backend.dto.JoinRequestDto;
 import com.yosai.backend.dto.LoginRequestDto;
-import com.yosai.backend.entity.Accommodation;
 import com.yosai.backend.service.AccommodationService;
+import com.yosai.backend.service.MemberService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -12,30 +14,36 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@RestController()
-@CrossOrigin(origins = "*")
+@RestController
+@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 public class AccommodationController {
 
     private final AccommodationService accommodationService;
+    private final MemberService memberService;
 
-    public AccommodationController(AccommodationService accommodationService) {
+    public AccommodationController(AccommodationService accommodationService,
+            MemberService memberService) {
         this.accommodationService = accommodationService;
+        this.memberService = memberService;
     }
 
     @GetMapping("/")
-    public List<Accommodation> popular() {
+    public List<AccommodationSummaryDto> popular() {
         // 1. 로그 확인
         System.out.println("AccommodationController - 메인페이지 실행()");
 
         // 2. 데이터 확인
-        List<Accommodation> 결과 = accommodationService.getPopular();
+        List<AccommodationSummaryDto> 결과 = accommodationService.getPopular();
         System.out.println(결과.toString());
         return 결과;
     }
@@ -75,7 +83,7 @@ public class AccommodationController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody LoginRequestDto data,
+    public ResponseEntity<String> login(@RequestBody LoginRequestDto data,
             HttpSession 세션) {
         System.out.println("객체타입으로 한꺼번에 전달된다.: " + data);
         // 자바스크립트에서 객체 형식으로 서버에 보내준다.
@@ -83,9 +91,22 @@ public class AccommodationController {
         // RequestBody 이용해서 꺼내야된다.
         // 꺼낼때 가장 비슷한 Map형식으로 변환해서 받는다.
 
-        세션.setAttribute(data.getId(), data);
+        boolean 로그인결과 = memberService.login(data);
 
-        return "로그인";
+        if (로그인결과) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("아이디 또는 비밀번호가 올바르지 않습니다.");
+        }
+
+        세션.setAttribute("userId", data.getId());
+        return ResponseEntity.ok("로그인성공");
+    }
+
+    @PostMapping("/join")
+    public String join(@RequestBody JoinRequestDto data) {
+        memberService.join(data);
+        return "회원가입 완료";
+
     }
 
 }
