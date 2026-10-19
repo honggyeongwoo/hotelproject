@@ -14,6 +14,10 @@ MySQL을 설치하고 실행한 뒤 `HotelProject` 데이터베이스를 만듭�
 Copy-Item .env.example .env
 ```
 
+백엔드의 `DB_URL`, `DB_USERNAME`, `DB_PASSWORD` 외에도 `FRONTEND_URL`,
+`CORS_ALLOWED_ORIGINS`, `VITE_API_BASE_URL`을 필요에 따라 변경할 수 있습니다.
+프론트엔드 API 주소를 바꾼 경우 Vite 개발 서버를 다시 시작하세요.
+
 `.env.example`은 GitHub에 올라가는 작성 예시입니다. 실제 비밀번호는 각 PC의 `.env`에 입력합니다. `.env`는 Git에서 제외되므로 GitHub에 올라가지 않고, 다른 PC에서 `git pull`해도 자동으로 전달되지 않습니다.
 
 ### 3. 백엔드 실행

@@ -14,7 +14,7 @@ export default function DetailInfo({ hotel }) {
   // 비교하기 버튼을 클릭하면 id 값을 저장하겠다.
   const [compareIds, setCompareIds] = useState(() => {
     //처음 열릴 때 저장된 값을 로컬 스토리지에서 읽어온다.
-    const saved = localStorage.getItem("compareIds");
+    const saved = sessionStorage.getItem("compareIds");
     return saved ? JSON.parse(saved) : [];
   });
 
@@ -117,7 +117,7 @@ export default function DetailInfo({ hotel }) {
     const newId = [...compareIds, hotel.id];
     setCompareIds(newId);
     console.log(newId);
-    localStorage.setItem("compareIds", JSON.stringify(newId));
+    sessionStorage.setItem("compareIds", JSON.stringify(newId));
 
     // 3개가 되면 물어보기
     // window.confirm(메시지)  자바스크립트에서 확인 / 취소 선택창 띄우기!
@@ -129,6 +129,8 @@ export default function DetailInfo({ hotel }) {
         //
         navigate("/compare");
       }
+    } else {
+      alert(` 숙소가 저장 되었습니다.(${newId.length} / 3)`);
     }
   };
 
@@ -170,22 +172,42 @@ export default function DetailInfo({ hotel }) {
           <h2>{discountedPrice.toLocaleString()}원</h2>
         </div>
 
-        <button
-          className="btn"
-          type="button"
-          style={{
-            boxSizing: "border-box",
-            width: "100px",
-            height: "50px",
-            padding: "10px 15px",
-            borderRadius: "15px",
-            backgroundColor: "var(--primary)",
-            color: "#ffffff",
-          }}
-          onClick={compareClick}
-        >
-          비교하기
-        </button>
+        <div style={{ display: "flex", gap: "8px" }}>
+          <button
+            className="btn"
+            type="button"
+            style={{
+              boxSizing: "border-box",
+              width: "100px",
+              height: "50px",
+              padding: "10px 15px",
+              border: "none",
+              borderRadius: "15px",
+              backgroundColor: "var(--primary)",
+              color: "#ffffff",
+            }}
+            onClick={compareClick}
+          >
+            비교하기
+          </button>
+          <button
+            className="btn"
+            type="button"
+            style={{
+              boxSizing: "border-box",
+              width: "150px",
+              height: "50px",
+              padding: "10px 15px",
+              border: "none",
+              borderRadius: "15px",
+              backgroundColor: "var(--primary)",
+              color: "#ffffff",
+            }}
+            onClick={() => navigate("/compare")}
+          >
+            비교표로 이동하기
+          </button>
+        </div>
       </div>
 
       <ul className="detail-info-amenities">

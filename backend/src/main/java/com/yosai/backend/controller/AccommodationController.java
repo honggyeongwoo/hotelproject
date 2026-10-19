@@ -1,9 +1,9 @@
 package com.yosai.backend.controller;
 
 import com.yosai.backend.dto.AccommodationDetailDto;
-import com.yosai.backend.dto.AccommodationSummaryDto;
 import com.yosai.backend.dto.JoinRequestDto;
 import com.yosai.backend.dto.LoginRequestDto;
+import com.yosai.backend.entity.Accommodation;
 import com.yosai.backend.service.AccommodationService;
 import com.yosai.backend.service.MemberService;
 
@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 public class AccommodationController {
 
     private final AccommodationService accommodationService;
@@ -38,12 +37,12 @@ public class AccommodationController {
     }
 
     @GetMapping("/")
-    public List<AccommodationSummaryDto> popular() {
+    public List<Accommodation> popular() {
         // 1. 로그 확인
         System.out.println("AccommodationController - 메인페이지 실행()");
 
         // 2. 데이터 확인
-        List<AccommodationSummaryDto> 결과 = accommodationService.getPopular();
+        List<Accommodation> 결과 = accommodationService.getPopular();
         System.out.println(결과.toString());
         return 결과;
     }
@@ -107,6 +106,21 @@ public class AccommodationController {
         memberService.join(data);
         return "회원가입 완료";
 
+    }
+
+    // 로그인 확인하는 메서드!
+    @GetMapping("/me")
+    public String checkMe(HttpSession 세션) {
+
+        // 1. 세션에서 기존 정보를 가져오기 !
+        String userId = (String) 세션.getAttribute("userId");
+
+        // 2. 없으면 로그인 안 한 상태!
+        System.out.println(userId);
+
+        // 3. 있으면 아이디를 JSON으로 응답!
+
+        return "";
     }
 
 }

@@ -1,52 +1,54 @@
-import { useEffect, useState } from 'react';
-import '../../css/Compare.css';
-import CompareCard from './CompareCard';
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { API_BASE_URL } from "../../api";
+import "../../css/Compare.css";
+import CompareCard from "../CompareCard";
 
 export default function Compare() {
-  const [initialRequest] = useState(() => {
-    const saved = localStorage.getItem('compareIds');
-    try {
-      const ids = saved ? JSON.parse(saved) : [];
-      if (!Array.isArray(ids) || ids.some((id) => !Number.isInteger(id))) {
-        throw new Error('비교할 숙소 ID 목록이 올바르지 않습니다.');
-      }
-      return { ids, error: '' };
-    } catch (requestError) {
-      return { ids: [], error: requestError.message };
-    }
-  });
   const [accommodations, setAccommodations] = useState([]);
-  const [loading, setLoading] = useState(
-    initialRequest.ids.length > 0 && !initialRequest.error,
-  );
-  const [error, setError] = useState(initialRequest.error);
+  const navigate = useNavigate();
 
+  //아이디값이 변경될 수 있기 때문에 변수
+  const [ids, setIds] = useState();
+
+  // 페이지가 열릴때 딱 한번 타이밍 맞춰서 데이터 가져오기
   useEffect(() => {
-    const { ids } = initialRequest;
-    if (ids.length === 0) {
-      return;
-    }
+    // 1. 세션스토리지에서 꺼내오기
+    const saved = sessionStorage.getItem("compareIds");
 
-    const controller = new AbortController();
-    fetch(`http://localhost:8080/compare?ids=${ids.join(',')}`, {
-      signal: controller.signal,
-    })
+    // 2. JSON타입 -> 자바스크립트 객체로 변경
+    // 브라우저가 꺼졌다가 켜지면 아에 데이터가 없어서 파싱할 문자가
+    // 없다. 그럼 에러가 유발!
+    const idList = saved ? JSON.parse(saved) : [];
+    setIds(idList);
+
+    // 3. 서버로 통신하기
+    fetch(`${API_BASE_URL}/compare?ids=${idList.join(",")}`)
       .then((response) => {
         if (!response.ok) {
-          throw new Error(`비교 정보를 불러오지 못했습니다. (${response.status})`);
+          throw new Error(
+            `비교 숙소를 불러오지 못했습니다: ${response.status}`,
+          );
         }
         return response.json();
       })
       .then(setAccommodations)
-      .catch((requestError) => {
-        if (requestError.name !== 'AbortError') {
-          setError(requestError.message);
-        }
-      })
-      .finally(() => setLoading(false));
+      .catch((error) => {
+        console.error("비교 숙소 조회에 실패했습니다.", error);
+      });
+  }, []);
 
-    return () => controller.abort();
-  }, [initialRequest]);
+  // 4. 빼기를 눌렀을 때 카드들의 상태와 sessionStorage를 같이 바꾸는 코드
+  // filter() : 삭제할 데이터를 필터링하는것 (자동반복!)
+  // 필요없는거는 제거하고 새로운 리스트를 만들어준다.
+  const removeOne = (id) => {
+    const newIds = ids.filter((x) => x != id);
+    sessionStorage.setItem("compareIds", JSON.stringify(newIds));
+    // 아이디들만 저장하는 변수 수정!
+    setIds(newIds);
+    // 숙소에 대한 정보들을 가지고 있는 변수 수정!
+    setAccommodations(accommodations.filter((a) => a.숙소정보.id != id));
+  };
 
   return (
     <main className="comparePage">
@@ -57,23 +59,31 @@ export default function Compare() {
         <p>체크인: 미정</p>
         <p>체크아웃: 미정</p>
       </section>
-      <div className="compareSaveInfo">
-        <p>비교를 저장하고 마이페이지에서 다시 확인하세요</p>
-        <button type="button">비교표 저장하기</button>
+      <div>
+        <p>이 비교를 저장하고 마이페이지에서 다시 확인하세요.</p>
+        <button type="button" onClick={() => navigate("/login")}>
+          비교표 저장하기
+        </button>
       </div>
-      {loading && <p>비교 정보를 불러오는 중...</p>}
-      {error && <p role="alert">{error}</p>}
-      {!loading && !error && accommodations.length === 0 && (
-        <p>비교할 숙소를 먼저 추가해 주세요.</p>
-      )}
       <div className="compareGrid">
-        {accommodations.map(({ 숙소정보, 이미지들 }) => (
+        <div className="compareCard">
           <CompareCard
-            key={숙소정보.id}
-            accommodation={숙소정보}
-            images={이미지들}
+            accommodation={accommodations[0]}
+            onRemove={() => removeOne(accommodations[0].숙소정보.id)}
           />
-        ))}
+        </div>
+        <div className="compareCard">
+          <CompareCard
+            accommodation={accommodations[1]}
+            onRemove={() => removeOne(accommodations[1].숙소정보.id)}
+          />
+        </div>
+        <div className="compareCard">
+          <CompareCard
+            accommodation={accommodations[2]}
+            onRemove={() => removeOne(accommodations[2].숙소정보.id)}
+          />
+        </div>
       </div>
     </main>
   );
