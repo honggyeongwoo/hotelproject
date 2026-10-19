@@ -73,6 +73,13 @@
   border-radius: 1rem;
 }
 
+.menu button.login {
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
 .hero {
   width: 100%;
   height: 480px;

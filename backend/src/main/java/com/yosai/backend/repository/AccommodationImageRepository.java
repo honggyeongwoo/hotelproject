@@ -9,5 +9,5 @@ import com.yosai.backend.entity.AccommodationImage;
 public interface AccommodationImageRepository
     extends JpaRepository<AccommodationImage, Long> {
   // 특정 숙소의 사진 전체 조회
-  List<AccommodationImage> findByAccommodation_IdOrderBySortOrderAsc(Long accommodationId);
+  List<AccommodationImage> findNByAccommodation_Id(Long accommodationId);
 }

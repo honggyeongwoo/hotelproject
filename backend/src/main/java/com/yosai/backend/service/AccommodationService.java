@@ -1,7 +1,6 @@
 package com.yosai.backend.service;
 
 import com.yosai.backend.dto.AccommodationDetailDto;
-import com.yosai.backend.dto.AccommodationSummaryDto;
 import com.yosai.backend.entity.Accommodation;
 import com.yosai.backend.entity.AccommodationImage;
 import com.yosai.backend.repository.AccommodationImageRepository;
@@ -25,25 +24,14 @@ public class AccommodationService {
         this.accommodationRepository = accommodationRepository;
     }
 
-    public List<AccommodationSummaryDto> getPopular() {
+    public List<Accommodation> getPopular() {
 
         try {
 
-            List<Accommodation> 숙소들 = accommodationRepository.findTop4ByOrderByReviewCountDesc();
-
-            List<AccommodationSummaryDto> 결과 = 숙소들.stream()
-                    .map(숙소 -> {
-                        String 대표이미지 = 숙소이미지담당자
-                                .findByAccommodation_IdOrderBySortOrderAsc(숙소.getId())
-                                .stream()
-                                .findFirst()
-                                .map(AccommodationImage::getImageUrl)
-                                .orElse(null);
-                        return AccommodationSummaryDto.from(숙소, 대표이미지);
-                    })
-                    .toList();
+            List<Accommodation> 결과 = accommodationRepository.findTop4ByOrderByReviewCountDesc();
 
             System.out.println("DB 조회 성공:" + 결과.size() + "개");
+
             return 결과;
         } catch (Exception e) {
             System.out.println("DB조회 실패!");
@@ -70,7 +58,7 @@ public class AccommodationService {
         }
         // 2. 숙소 이미지 조회
         List<AccommodationImage> 이미지들 = 숙소이미지담당자
-                .findByAccommodation_IdOrderBySortOrderAsc(id);
+                .findNByAccommodation_Id(id);
         System.out.println("이미지 개수: " + 이미지들.size());
 
         // 3. 숙소이미지 전체 정보중에 imageUrl만 뽑아서 저장하기

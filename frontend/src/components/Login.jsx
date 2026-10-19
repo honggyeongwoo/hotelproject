@@ -1,8 +1,9 @@
 import { useState } from "react";
+import { API_BASE_URL } from "../api";
 import "../css/Login.css";
 import { useNavigate } from "react-router-dom";
 
-export default function Login() {
+export default function Login({ onLogin }) {
   const [isSignUp, setIsSignUp] = useState(false);
   const navigate = useNavigate();
 
@@ -14,7 +15,7 @@ export default function Login() {
   const loginRequest = () => {
     console.log("버튼 눌림!");
 
-    fetch("http://localhost:8080/login", {
+    fetch(`${API_BASE_URL}/login`, {
       method: "POST",
       credentials: "include",
       headers: {
@@ -22,10 +23,21 @@ export default function Login() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ id, pw }),
-    }).then((응답) => {
-      console.log(응답.json());
-      navigate("/");
-    });
+    })
+      .then(async (응답) => {
+        if (!응답.ok) {
+          const errorMessage = await 응답.text();
+          window.alert(errorMessage || "로그인에 실패했습니다.");
+          return;
+        }
+
+        onLogin(id);
+        navigate("/");
+      })
+      .catch((error) => {
+        console.error("로그인 요청에 실패했습니다.", error);
+        window.alert("로그인 요청에 실패했습니다.");
+      });
   };
 
   // form태그로 데이터가 갈 때는 RequestParam("id")
@@ -83,11 +95,17 @@ export default function Login() {
           </form>
         ) : (
           <form className="loginForm">
-            <input type="text" placeholder="아이디" aria-label="아이디" />
+            <input
+              type="text"
+              placeholder="아이디"
+              aria-label="아이디"
+              onChange={(e) => setId(e.target.value)}
+            />
             <input
               type="password"
               placeholder="비밀번호"
               aria-label="비밀번호"
+              onChange={(e) => setPw(e.target.value)}
             />
             <button
               type="button"

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import { Link, Route, Routes } from "react-router-dom";
+import { API_BASE_URL } from "./api";
 import Detail from "./components/Detail";
 import Compare from "./components/compare/Compare";
 import Login from "./components/Login";
@@ -35,6 +36,19 @@ const FOOTER_LINKS = ["이용약관", "개인정보처리방침", "회사 소개
 function App() {
   // 화면 인기 숙소를 보여주기 위해서!
   const [hotels, setHotels] = useState([]);
+  const [userId, setUserId] = useState(
+    () => sessionStorage.getItem("userId") || "",
+  );
+
+  const handleLogin = (id) => {
+    sessionStorage.setItem("userId", id);
+    setUserId(id);
+  };
+
+  const handleLogout = () => {
+    sessionStorage.removeItem("userId");
+    setUserId("");
+  };
 
   // 페이지 실행하면 서버에서 데이터 가져오기
   // useEffect
@@ -42,7 +56,7 @@ function App() {
   //   안에 넣어준다.
 
   useEffect(() => {
-    fetch("http://localhost:8080/")
+    fetch(`${API_BASE_URL}/`)
       .then((res) => res.json())
       .then((data) => {
         console.log("응답: " + data);
@@ -59,9 +73,21 @@ function App() {
           <a href="#">국내숙소</a>
           <a href="#">해외숙소</a>
           <a href="#">특가</a>
-          <Link className="login" to="/login">
-            로그인
-          </Link>
+          {userId ? (
+            <>
+              <h3>{userId}님</h3>
+              <Link className="login" to="/mypage">
+                마이페이지
+              </Link>
+              <button className="login" type="button" onClick={handleLogout}>
+                로그아웃
+              </button>
+            </>
+          ) : (
+            <Link className="login" to="/login">
+              로그인
+            </Link>
+          )}
         </nav>
       </header>
 
@@ -218,7 +244,7 @@ function App() {
 
         <Route path="/detail/:id" element={<Detail />} />
         <Route path="/compare" element={<Compare />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<Login onLogin={handleLogin} />} />
         <Route path="/mypage" element={<Mypage />} />
       </Routes>
 

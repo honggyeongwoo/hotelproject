@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { API_BASE_URL } from "../api";
 import "../css/Detail.css";
 import DetailInfo from "./detail/DetailInfo";
 
@@ -25,7 +26,7 @@ export default function Detail() {
 
   useEffect(() => {
     // 1. 스프링부트한테 통신 fetch(url)
-    fetch(`http://localhost:8080/detail/${id}`)
+    fetch(`${API_BASE_URL}/detail/${id}`)
       // 2. 응답
       .then((res) => res.json())
       .then((data) => {

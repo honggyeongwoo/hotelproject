@@ -20,7 +20,6 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-webmvc'
-	implementation 'org.springframework.security:spring-security-crypto'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'com.mysql:mysql-connector-j'
@@ -38,8 +37,10 @@ dependencies {
 	// 4.0.x
 	implementation 'org.springframework.boot:spring-boot-starter-aspectj'
 
-	// 비밀번호 인코더
-	implementation 'org.springframework.security:spring-security-crypto'
+	// 시큐리티 안에 있는 암호화하는 기능만 사용하겠다.
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+  testImplementation 'org.springframework.boot:spring-boot-starter-security-test'
+
 }
 
 tasks.named('test') {
