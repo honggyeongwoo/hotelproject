@@ -109,4 +109,13 @@ public class AccommodationController {
 
     }
 
+    // 로그인 확인 메서드
+    @GetMapping("/me")
+    public String checkMe(HttpSession 세션) {
+
+        // 1. 세션에서 기존 정보 가져오기
+        String userId = (String) 세션.getAttribute("userId");
+        return "";
+    }
+
 }

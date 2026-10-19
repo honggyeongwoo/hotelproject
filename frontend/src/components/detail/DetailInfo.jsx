@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function DetailInfo({ hotel }) {
   const [isFavorite, setIsFavorite] = useState(false);
 
   // 카카오 로딩,에러 상태처리
   const [isMapLoading, setIsMapLoading] = useState(true);
-  const [mapError, setMapError] = useState("");
+  const [mapError, setMapError] = useState('');
 
   // 다시 시도 횟수 상태 처리
   const [retryCount, setReTryCount] = useState(0);
@@ -14,34 +14,28 @@ export default function DetailInfo({ hotel }) {
   // 비교하기 버튼을 클릭하면 id 값을 저장하겠다.
   const [compareIds, setCompareIds] = useState(() => {
     //처음 열릴 때 저장된 값을 로컬 스토리지에서 읽어온다.
-    const saved = localStorage.getItem("compareIds");
+    const saved = sessionStorage.getItem('compareIds');
     return saved ? JSON.parse(saved) : [];
   });
 
   // 다른 페이지로 이동할 때 사용하는 도구!
   const navigate = useNavigate();
 
-  const discountedPrice = Math.round(
-    (hotel.originalPrice * (100 - hotel.discountRate)) / 100,
-  );
+  const discountedPrice = Math.round((hotel.originalPrice * (100 - hotel.discountRate)) / 100);
   const ratingMessage =
-    hotel.rating >= 4.5
-      ? "최고예요"
-      : hotel.rating >= 4.0
-        ? "아주 좋아요"
-        : "좋아요";
+    hotel.rating >= 4.5 ? '최고예요' : hotel.rating >= 4.0 ? '아주 좋아요' : '좋아요';
 
   useEffect(() => {
     let cancelled = false;
     let finished = false;
 
     setIsMapLoading(true);
-    setMapError("");
+    setMapError('');
 
     const timeoutId = setTimeout(() => {
       if (cancelled || finished) return;
       finished = true;
-      setMapError("지도를 불러오는 시간이 초과되었습니다.");
+      setMapError('지도를 불러오는 시간이 초과되었습니다.');
       setIsMapLoading(false);
     }, 10000);
 
@@ -53,9 +47,9 @@ export default function DetailInfo({ hotel }) {
     };
 
     try {
-      const mapContainer = document.getElementById("locationMapPlaceholder");
+      const mapContainer = document.getElementById('locationMapPlaceholder');
       if (!mapContainer || !window.kakao?.maps?.services) {
-        finishWithError("카카오 지도를 불러오지 못했습니다.");
+        finishWithError('카카오 지도를 불러오지 못했습니다.');
       } else {
         const map = new window.kakao.maps.Map(mapContainer, {
           center: new window.kakao.maps.LatLng(33.450701, 126.570667),
@@ -72,26 +66,20 @@ export default function DetailInfo({ hotel }) {
               return;
             }
 
-            const coords = new window.kakao.maps.LatLng(
-              result[0].y,
-              result[0].x,
-            );
+            const coords = new window.kakao.maps.LatLng(result[0].y, result[0].x);
             new window.kakao.maps.Marker({ map, position: coords });
             map.setCenter(coords);
             finished = true;
             setIsMapLoading(false);
           } catch (error) {
-            console.error(
-              "카카오 지도 주소 처리 중 오류가 발생했습니다.",
-              error,
-            );
-            finishWithError("숙소 위치를 지도에 표시하지 못했습니다.");
+            console.error('카카오 지도 주소 처리 중 오류가 발생했습니다.', error);
+            finishWithError('숙소 위치를 지도에 표시하지 못했습니다.');
           }
         });
       }
     } catch (error) {
-      console.error("카카오 지도를 생성하는 중 오류가 발생했습니다.", error);
-      finishWithError("카카오 지도를 생성하지 못했습니다.");
+      console.error('카카오 지도를 생성하는 중 오류가 발생했습니다.', error);
+      finishWithError('카카오 지도를 생성하지 못했습니다.');
     }
 
     return () => {
@@ -109,26 +97,46 @@ export default function DetailInfo({ hotel }) {
   // useState의 값이 한번 늦게 저장되는 버그!
 
   const compareClick = () => {
-    // 이미 담긴 숨소라면 중단 true는 이미 담김,false 안 담김
-    if (compareIds.includes(hotel.id)) return;
-    // 3개가 꽉 차면 중단
-    if (compareIds.length >= 3) return;
+    // 다른 상세 페이지에서 바뀐 목록도 반영하도록 클릭 시 저장소를 다시 읽습니다.
+    let savedIds = [];
+    try {
+      const saved = sessionStorage.getItem('compareIds');
+      savedIds = saved ? JSON.parse(saved) : [];
+      if (!Array.isArray(savedIds)) savedIds = [];
+    } catch (error) {
+      console.error('비교 목록을 읽지 못했습니다.', error);
+    }
 
-    const newId = [...compareIds, hotel.id];
+    if (savedIds.some((id) => String(id) === String(hotel.id))) {
+      setCompareIds(savedIds);
+      alert('이미 비교 목록에 담긴 숙소입니다.');
+      return;
+    }
+    if (savedIds.length >= 3) {
+      setCompareIds(savedIds);
+      alert('비교 목록에는 숙소를 최대 3개까지 담을 수 있습니다.');
+      return;
+    }
+
+    const newId = [...savedIds, hotel.id];
     setCompareIds(newId);
     console.log(newId);
-    localStorage.setItem("compareIds", JSON.stringify(newId));
+    sessionStorage.setItem('compareIds', JSON.stringify(newId));
+
+    //
 
     // 3개가 되면 물어보기
     // window.confirm(메시지)  자바스크립트에서 확인 / 취소 선택창 띄우기!
     //
     if (newId.length == 3) {
-      if (window.confirm("3개를 담았어요. 비교표를 볼까요?")) {
+      if (window.confirm('3개를 담았어요. 비교표를 볼까요?')) {
         //내가 이동할 경로를 써주면 된다. navigate("경로")
         // Routes 태그 안에 경로가 등록 되어있어야된다!
         //
-        navigate("/compare");
+        navigate('/compare');
       }
+    } else {
+      alert(`숙소가 저장 되었습니다.(${newId.length} / 3)`);
     }
   };
 
@@ -137,13 +145,13 @@ export default function DetailInfo({ hotel }) {
       <div className="detail-info-heading">
         <span className="detail-info-type">{hotel.type}</span>
         <button
-          className={`detail-info-favorite${isFavorite ? " is-favorite" : ""}`}
+          className={`detail-info-favorite${isFavorite ? ' is-favorite' : ''}`}
           type="button"
-          aria-label={isFavorite ? "찜 취소" : "찜하기"}
+          aria-label={isFavorite ? '찜 취소' : '찜하기'}
           aria-pressed={isFavorite}
           onClick={() => setIsFavorite((favorite) => !favorite)}
         >
-          {isFavorite ? "♥" : "♡"}
+          {isFavorite ? '♥' : '♡'}
         </button>
       </div>
 
@@ -170,36 +178,56 @@ export default function DetailInfo({ hotel }) {
           <h2>{discountedPrice.toLocaleString()}원</h2>
         </div>
 
-        <button
-          className="btn"
-          type="button"
-          style={{
-            boxSizing: "border-box",
-            width: "100px",
-            height: "50px",
-            padding: "10px 15px",
-            borderRadius: "15px",
-            backgroundColor: "var(--primary)",
-            color: "#ffffff",
-          }}
-          onClick={compareClick}
-        >
-          비교하기
-        </button>
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <button
+            className="btn"
+            type="button"
+            style={{
+              boxSizing: 'border-box',
+              width: '100px',
+              height: '50px',
+              padding: '10px 15px',
+              borderRadius: '15px',
+              backgroundColor: 'var(--primary)',
+              color: '#ffffff',
+              border: 'none',
+            }}
+            onClick={compareClick}
+          >
+            비교하기
+          </button>
+          <button
+            className="btn"
+            type="button"
+            style={{
+              boxSizing: 'border-box',
+              width: '100px',
+              height: '50px',
+              padding: '10px 15px',
+              borderRadius: '15px',
+              backgroundColor: 'var(--primary)',
+              color: '#ffffff',
+              border: 'none',
+            }}
+            onClick={() => navigate('/compare')}
+          >
+            비교표로 이동
+          </button>
+        </div>
       </div>
 
       <ul className="detail-info-amenities">
-        <li className={hotel.parking ? "is-available" : "is-unavailable"}>
+        <li className={hotel.parking ? 'is-available' : 'is-unavailable'}>
           <span>주차</span>
-          <strong>{hotel.parking ? "가능" : "불가"}</strong>
+          <strong>{hotel.parking ? '가능' : '불가'}</strong>
         </li>
-        <li className={hotel.breakfast ? "is-available" : "is-unavailable"}>
+        <li className={hotel.breakfast ? 'is-available' : 'is-unavailable'}>
           <span>조식</span>
-          <strong>{hotel.breakfast ? "가능" : "불가"}</strong>
+          <strong>{hotel.breakfast ? '가능' : '불가'}</strong>
         </li>
-        <li className={hotel.refundable ? "is-available" : "is-unavailable"}>
+        <li className={hotel.refundable ? 'is-available' : 'is-unavailable'}>
           <span>무료 취소</span>
-          <strong>{hotel.refundable ? "가능" : "불가"}</strong>
+          <strong>{hotel.refundable ? '가능' : '불가'}</strong>
         </li>
       </ul>
 

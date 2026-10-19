@@ -1,6 +1,12 @@
-import '../../css/Compare.css';
+// CompareCard.jsx
 
-export default function CompareCard({ accommodation, images = [] }) {
+import '../css/Compare.css';
+
+export default function CompareCard({ accommodation, images = [], onRemove }) {
+  if (!accommodation) {
+    return <div className="compareCardEmpty">비교할 숙소가 없습니다</div>;
+  }
+
   const discountedPrice = Math.round(
     (accommodation.originalPrice * (100 - accommodation.discountRate)) / 100,
   );
@@ -26,13 +32,13 @@ export default function CompareCard({ accommodation, images = [] }) {
           )}
         </p>
         <p>평점 {accommodation.rating}</p>
-        <p>리뷰 {accommodation.reviewCount.toLocaleString()}개</p>
+        <p>리뷰 {(accommodation.reviewCount ?? 0).toLocaleString()}개</p>
         <p>주차: {accommodation.parking ? '가능' : '불가'}</p>
         <p>조식: {accommodation.breakfast ? '가능' : '불가'}</p>
         <p>취소 및 환불: {accommodation.refundable ? '가능' : '불가'}</p>
         <p>취소 정책: {accommodation.cancelPolicy || '정보 없음'}</p>
         <p>환불: {accommodation.refundable ? '가능' : '불가'}</p>
-        <button type="button" aria-label="비교 카드 기능">
+        <button onClick={onRemove} type="button" aria-label="비교 카드 기능">
           빼기
         </button>
       </div>

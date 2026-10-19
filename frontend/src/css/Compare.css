@@ -23,14 +23,29 @@
   gap: 20px;
 }
 
-.compareCard {
-  min-height: 320px;
+/* 숙소 유무와 관계없이 높이가 고정되는 슬롯 */
+.compareSlot {
+  height: 780px;
   min-width: 0;
   padding: 20px;
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   background: #ffffff;
+  box-sizing: border-box;
+}
+
+.compareCard {
+  min-width: 0;
+}
+
+.compareCardEmpty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--text-sub);
 }
 
 .compareCard > h3 {

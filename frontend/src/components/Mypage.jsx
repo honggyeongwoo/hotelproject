@@ -1,6 +1,16 @@
+import { useEffect } from 'react';
 import '../css/Mypage.css';
 
 export default function MyPage() {
+  // 마이페이지가 열릴때 확인 한번하는
+  useEffect(() => {
+    // 스프링부트로 통신
+    fetch('http://localhost:8080/me', { credentials: 'include' }).then((응답) => {
+      // 로그인 되어있으면 로그인 상태를 저장하는 변수와
+      // 로그인 id를 저장하는 변수 두개를 만든다.
+    });
+  });
+
   return (
     <div className="mypage-content">
       <div className="mypage-1">
