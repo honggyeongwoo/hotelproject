@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { API_BASE_URL } from "../api";
 import "../css/Login.css";
 import { useNavigate } from "react-router-dom";
 
@@ -15,7 +14,7 @@ export default function Login({ onLogin }) {
   const loginRequest = () => {
     console.log("버튼 눌림!");
 
-    fetch(`${API_BASE_URL}/login`, {
+    fetch("http://localhost:8080/login", {
       method: "POST",
       credentials: "include",
       headers: {

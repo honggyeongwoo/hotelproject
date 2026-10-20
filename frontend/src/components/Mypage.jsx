@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { API_BASE_URL } from "../api";
 
 export default function Mypage() {
   const navigate = useNavigate();
@@ -17,7 +16,7 @@ export default function Mypage() {
       : undefined;
 
     // 1. 스프링부트 서버로 통신!
-    fetch(`${API_BASE_URL}/me`, { credentials: "include" }).then(
+    fetch("http://localhost:8080/me", { credentials: "include" }).then(
       (응답) => {
         console.log(응답.status);
 

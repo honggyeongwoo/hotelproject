@@ -1,53 +1,83 @@
-import { useEffect, useState } from "react";
-import "./App.css";
-import { Link, Route, Routes } from "react-router-dom";
-import { API_BASE_URL } from "./api";
-import Detail from "./components/Detail";
-import Compare from "./components/compare/Compare";
-import Login from "./components/Login";
-import Mypage from "./components/Mypage";
+import { useEffect, useState } from 'react';
+import './App.css';
+import { Link, Navigate, Route, Routes, useNavigate } from 'react-router-dom';
+import Detail from './components/Detail';
+import Compare from './components/compare/Compare';
+import Login from './components/Login';
+import Mypage from './components/Mypage';
 
 // 인기 지역
 const REGIONS = [
   {
-    name: "서울",
+    name: '서울',
     imageUrl:
-      "https://images.unsplash.com/photo-1546874177-9e664107314e?auto=format&fit=crop&w=800&q=80",
+      'https://images.unsplash.com/photo-1546874177-9e664107314e?auto=format&fit=crop&w=800&q=80',
   },
   {
-    name: "부산",
+    name: '부산',
     imageUrl:
-      "https://images.unsplash.com/photo-1768097666072-22f58f0b40cd?auto=format&fit=crop&w=800&q=80",
+      'https://images.unsplash.com/photo-1768097666072-22f58f0b40cd?auto=format&fit=crop&w=800&q=80',
   },
   {
-    name: "제주",
+    name: '제주',
     imageUrl:
-      "https://images.unsplash.com/photo-1612977512598-3b8d6a498bbb?auto=format&fit=crop&w=800&q=80",
+      'https://images.unsplash.com/photo-1612977512598-3b8d6a498bbb?auto=format&fit=crop&w=800&q=80',
   },
   {
-    name: "강릉",
+    name: '강릉',
     imageUrl:
-      "https://images.unsplash.com/photo-1723528582975-5c6629c6356e?auto=format&fit=crop&w=800&q=80",
+      'https://images.unsplash.com/photo-1723528582975-5c6629c6356e?auto=format&fit=crop&w=800&q=80',
   },
 ];
 
-const FOOTER_LINKS = ["이용약관", "개인정보처리방침", "회사 소개"];
+const FOOTER_LINKS = ['이용약관', '개인정보처리방침', '회사 소개'];
 
 function App() {
   // 화면 인기 숙소를 보여주기 위해서!
   const [hotels, setHotels] = useState([]);
-  const [userId, setUserId] = useState(
-    () => sessionStorage.getItem("userId") || "",
-  );
+  const [userId, setUserId] = useState(() => sessionStorage.getItem('userId') || '');
+
+  // 페이지 이동에 도움되는 도구를 가져와서 변수에 저장하기
+  const navigate = useNavigate();
 
   const handleLogin = (id) => {
-    sessionStorage.setItem("userId", id);
-    setUserId(id);
+    fetch('http://localhost:8080/me', {
+      credentials: 'include', //세션 쿠키 함께 보내기
+    })
+      .then((응답) => {
+        if (!응답.ok) {
+          throw new Error('로그인 상태 확인 실패!!');
+        }
+        // 정상적으로 정보가 왔다면 다음으로 넘길께
+        return 응답.json();
+      })
+      .then((데이터) => {
+        setUserId(데이터.userId);
+      });
   };
 
   const handleLogout = () => {
-    sessionStorage.removeItem("userId");
-    setUserId("");
+    // 서버로 요청하기
+    fetch('http://localhost:8080/logout', {
+      method: 'POST',
+      credentials: 'include', //세션 쿠키 함께 보내기
+    })
+      .then((응답) => {
+        if (!응답.ok) {
+          throw new Error('로그아웃 실패!');
+        }
+
+        // 로그아웃실패 아니고 정상이면
+        sessionStorage.removeItem('userId');
+        setUserId('');
+
+        alert('로그아웃되었습니다.!');
+        navigate('/');
+      })
+      .catch((에러) => {
+        console.error(에러);
+        alert('로그아웃에 실패했습니다.');
+      });
   };
 
   // 페이지 실행하면 서버에서 데이터 가져오기
@@ -56,10 +86,10 @@ function App() {
   //   안에 넣어준다.
 
   useEffect(() => {
-    fetch(`${API_BASE_URL}/`)
+    fetch('http://localhost:8080/')
       .then((res) => res.json())
       .then((data) => {
-        console.log("응답: " + data);
+        console.log('응답: ' + data);
         setHotels(data);
       });
   }, []);
@@ -185,15 +215,9 @@ function App() {
                             <div className="popularImageWrap">
                               <img src={hotel.imageUrl} alt={hotel.name} />
                               {hotel.discountRate > 0 && (
-                                <span className="discountBadge">
-                                  {hotel.discountRate}% 할인
-                                </span>
+                                <span className="discountBadge">{hotel.discountRate}% 할인</span>
                               )}
-                              <button
-                                className="favoriteButton"
-                                type="button"
-                                aria-label="찜하기"
-                              >
+                              <button className="favoriteButton" type="button" aria-label="찜하기">
                                 ♡
                               </button>
                             </div>
@@ -207,13 +231,9 @@ function App() {
                               </p>
                               <p className="popularPrice">
                                 {hotel.discountRate > 0 && (
-                                  <del>
-                                    {hotel.originalPrice.toLocaleString()}원
-                                  </del>
+                                  <del>{hotel.originalPrice.toLocaleString()}원</del>
                                 )}
-                                <strong>
-                                  {discountedPrice.toLocaleString()}원
-                                </strong>
+                                <strong>{discountedPrice.toLocaleString()}원</strong>
                               </p>
                               <small>1박 기준 · 세금 포함</small>
                             </div>
@@ -261,12 +281,9 @@ function App() {
           </ul>
         </nav>
         <address>
-          주식회사 쉬어가 · 대표 홍길동 · 서울특별시 중구 여행로 10 ·
-          사업자등록번호 000-00-00000
+          주식회사 쉬어가 · 대표 홍길동 · 서울특별시 중구 여행로 10 · 사업자등록번호 000-00-00000
         </address>
-        <small>
-          숙소·가격·회사 정보는 디자인을 위한 예시입니다. © 2026 쉬어가
-        </small>
+        <small>숙소·가격·회사 정보는 디자인을 위한 예시입니다. © 2026 쉬어가</small>
       </footer>
     </div>
   );

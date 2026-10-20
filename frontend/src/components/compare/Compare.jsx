@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { API_BASE_URL } from "../../api";
 import "../../css/Compare.css";
 import CompareCard from "../CompareCard";
 
@@ -23,7 +22,8 @@ export default function Compare() {
     setIds(idList);
 
     // 3. 서버로 통신하기
-    fetch(`${API_BASE_URL}/compare?ids=${idList.join(",")}`)
+    //  http://localhost:8080/compare?ids=1,2,3
+    fetch("http://localhost:8080/compare?ids=" + idList.join(","))
       .then((response) => {
         if (!response.ok) {
           throw new Error(

@@ -110,7 +110,7 @@ public class AccommodationController {
 
     // 로그인 확인하는 메서드!
     @GetMapping("/me")
-    public String checkMe(HttpSession 세션) {
+    public ResponseEntity<Map<String, String>> checkMe(HttpSession 세션) {
 
         // 1. 세션에서 기존 정보를 가져오기 !
         String userId = (String) 세션.getAttribute("userId");
@@ -120,7 +120,20 @@ public class AccommodationController {
 
         // 3. 있으면 아이디를 JSON으로 응답!
 
-        return "";
+        return ResponseEntity.ok(
+                Map.of("userId", userId == null ? "" : userId));
+    }
+
+    // 로그아웃
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(HttpSession 세션) {
+
+        // 세션에 정보 지우기!
+        세션.invalidate();
+
+        // 로그아웃되었기 때문에 응답하는 객체를 만들어서 상태 코드랑
+        // 내용을 보내야되는데 내용이 없음 build() 빈 내용이간다.
+        return ResponseEntity.ok().build();
     }
 
 }

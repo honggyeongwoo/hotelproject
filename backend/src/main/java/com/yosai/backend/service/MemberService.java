@@ -33,17 +33,23 @@ public class MemberService {
     }
 
     public boolean login(LoginRequestDto data) {
+        if (data == null
+                || data.getId() == null
+                || data.getId().isBlank()
+                || data.getPw() == null
+                || data.getPw().isBlank()) {
+            return false;
+        }
 
         // 1. 데이터베이서 찾는다.
         Member 찾은회원 = memberRepository
                 .findByUserId(data.getId());
 
-        System.out.println("찾은회원 아이디:" + 찾은회원.getUserId());
-
         // 2.만약 회원이 없다면
         if (찾은회원 == null) {
             return false;
         }
+        System.out.println("찾은회원 아이디:" + 찾은회원.getUserId());
         // 3. 회원이 있다면 비교하기
         return encoder.matches(data.getPw(), 찾은회원.getPw());
 
