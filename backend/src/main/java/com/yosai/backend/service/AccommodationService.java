@@ -1,6 +1,7 @@
 package com.yosai.backend.service;
 
 import com.yosai.backend.dto.AccommodationDetailDto;
+import com.yosai.backend.dto.AccommodationSummaryDto;
 import com.yosai.backend.entity.Accommodation;
 import com.yosai.backend.entity.AccommodationImage;
 import com.yosai.backend.repository.AccommodationImageRepository;
@@ -24,15 +25,23 @@ public class AccommodationService {
         this.accommodationRepository = accommodationRepository;
     }
 
-    public List<Accommodation> getPopular() {
+    public List<AccommodationSummaryDto> getPopular() {
 
         try {
 
-            List<Accommodation> 결과 = accommodationRepository.findTop4ByOrderByReviewCountDesc();
+            List<Accommodation> 인기숙소들 = accommodationRepository.findTop4ByOrderByReviewCountDesc();
 
-            System.out.println("DB 조회 성공:" + 결과.size() + "개");
+            System.out.println("DB 조회 성공:" + 인기숙소들.size() + "개");
 
-            return 결과;
+            return 인기숙소들.stream()
+                    .map(숙소 -> {
+                        String 이미지주소 = 숙소이미지담당자
+                                .findFirstByAccommodation_IdOrderBySortOrderAsc(숙소.getId())
+                                .map(AccommodationImage::getImageUrl)
+                                .orElse(null);
+                        return AccommodationSummaryDto.from(숙소, 이미지주소);
+                    })
+                    .toList();
         } catch (Exception e) {
             System.out.println("DB조회 실패!");
 

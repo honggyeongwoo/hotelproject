@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { API_BASE_URL } from "../api";
 import "../css/Detail.css";
 import DetailInfo from "./detail/DetailInfo";
 
@@ -22,20 +21,30 @@ export default function Detail() {
   const [hotel, setHotel] = useState(null);
 
   // 이미지는 이미지대로 따로! 저장하는 변수
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState([]);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     // 1. 스프링부트한테 통신 fetch(url)
-    fetch(`${API_BASE_URL}/detail/${id}`)
+    fetch(`http://localhost:8080/detail/${id}`)
       // 2. 응답
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`상세 정보를 불러오지 못했습니다. (HTTP ${res.status})`);
+        }
+        return res.json();
+      })
       .then((data) => {
         setHotel(data.숙소정보);
-        setImage(data.이미지들);
+        setImage(data.이미지들 ?? []);
+      })
+      .catch((err) => {
+        setError(err.message || "상세 정보를 불러오지 못했습니다.");
       }); //받은데이터를 변수에저장
-  }, []);
+  }, [id]);
 
   // 데이터가 오기 전에 화면을 그리려고 할 수있다.
+  if (error) return <p role="alert">{error}</p>;
   if (!hotel) return <p>불러오는 중...</p>;
 
   // 로딩이나 에러에 대한 처리도 할 수있도록 코드를 추가하는게 좋다

@@ -1,8 +1,7 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { API_BASE_URL } from "../../api";
-import "../../css/Compare.css";
-import CompareCard from "../CompareCard";
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import '../../css/Compare.css';
+import CompareCard from '../CompareCard';
 
 export default function Compare() {
   const [accommodations, setAccommodations] = useState([]);
@@ -11,10 +10,35 @@ export default function Compare() {
   //아이디값이 변경될 수 있기 때문에 변수
   const [ids, setIds] = useState();
 
+  const handleSave = () => {
+    fetch('http://localhost:8080/me', {
+      credentials: 'include',
+    })
+      .then((응답) => {
+        if (!응답.ok) {
+          throw new Error('로그인 확인 실패');
+        }
+
+        return 응답.json();
+      })
+      .then((데이터) => {
+        if (!데이터.userId) {
+          alert('로그인이 필요합니다.');
+          navigate('/login');
+          return;
+        }
+
+        navigate('/mypage');
+      })
+      .catch((에러) => {
+        console.error(에러);
+        alert('로그인 상태를 확인하지 못했습니다. 서버 연결을 확인해주세요.');
+      });
+  };
   // 페이지가 열릴때 딱 한번 타이밍 맞춰서 데이터 가져오기
   useEffect(() => {
     // 1. 세션스토리지에서 꺼내오기
-    const saved = sessionStorage.getItem("compareIds");
+    const saved = sessionStorage.getItem('compareIds');
 
     // 2. JSON타입 -> 자바스크립트 객체로 변경
     // 브라우저가 꺼졌다가 켜지면 아에 데이터가 없어서 파싱할 문자가
@@ -23,18 +47,17 @@ export default function Compare() {
     setIds(idList);
 
     // 3. 서버로 통신하기
-    fetch(`${API_BASE_URL}/compare?ids=${idList.join(",")}`)
+    //  http://localhost:8080/compare?ids=1,2,3
+    fetch('http://localhost:8080/compare?ids=' + idList.join(','))
       .then((response) => {
         if (!response.ok) {
-          throw new Error(
-            `비교 숙소를 불러오지 못했습니다: ${response.status}`,
-          );
+          throw new Error(`비교 숙소를 불러오지 못했습니다: ${response.status}`);
         }
         return response.json();
       })
       .then(setAccommodations)
       .catch((error) => {
-        console.error("비교 숙소 조회에 실패했습니다.", error);
+        console.error('비교 숙소 조회에 실패했습니다.', error);
       });
   }, []);
 
@@ -43,7 +66,7 @@ export default function Compare() {
   // 필요없는거는 제거하고 새로운 리스트를 만들어준다.
   const removeOne = (id) => {
     const newIds = ids.filter((x) => x != id);
-    sessionStorage.setItem("compareIds", JSON.stringify(newIds));
+    sessionStorage.setItem('compareIds', JSON.stringify(newIds));
     // 아이디들만 저장하는 변수 수정!
     setIds(newIds);
     // 숙소에 대한 정보들을 가지고 있는 변수 수정!
@@ -61,7 +84,7 @@ export default function Compare() {
       </section>
       <div>
         <p>이 비교를 저장하고 마이페이지에서 다시 확인하세요.</p>
-        <button type="button" onClick={() => navigate("/login")}>
+        <button type="button" onClick={handleSave}>
           비교표 저장하기
         </button>
       </div>
