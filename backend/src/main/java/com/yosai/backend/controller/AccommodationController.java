@@ -1,28 +1,25 @@
 package com.yosai.backend.controller;
 
-import com.yosai.backend.dto.AccommodationDetailDto;
-import com.yosai.backend.dto.JoinRequestDto;
-import com.yosai.backend.dto.LoginRequestDto;
-import com.yosai.backend.entity.Accommodation;
-import com.yosai.backend.service.AccommodationService;
-import com.yosai.backend.service.MemberService;
-
-import jakarta.servlet.http.HttpSession;
-
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RestController;
-
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.yosai.backend.dto.AccommodationDetailDto;
+import com.yosai.backend.dto.AccommodationSummaryDto;
+import com.yosai.backend.dto.JoinRequestDto;
+import com.yosai.backend.dto.LoginRequestDto;
+import com.yosai.backend.service.AccommodationService;
+import com.yosai.backend.service.MemberService;
+
+import jakarta.servlet.http.HttpSession;
 
 @RestController
 public class AccommodationController {
@@ -37,12 +34,12 @@ public class AccommodationController {
     }
 
     @GetMapping("/")
-    public List<Accommodation> popular() {
+    public List<AccommodationSummaryDto> popular() {
         // 1. 로그 확인
         System.out.println("AccommodationController - 메인페이지 실행()");
 
         // 2. 데이터 확인
-        List<Accommodation> 결과 = accommodationService.getPopular();
+        List<AccommodationSummaryDto> 결과 = accommodationService.getPopular();
         System.out.println(결과.toString());
         return 결과;
     }
