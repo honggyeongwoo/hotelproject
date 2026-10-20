@@ -31,6 +31,7 @@ public class AccommodationController {
             MemberService memberService) {
         this.accommodationService = accommodationService;
         this.memberService = memberService;
+
     }
 
     @GetMapping("/")

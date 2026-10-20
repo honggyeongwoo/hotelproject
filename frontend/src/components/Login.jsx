@@ -6,8 +6,14 @@ export default function Login({ onLogin }) {
   const [isSignUp, setIsSignUp] = useState(false);
   const navigate = useNavigate();
 
-  // 현재 비교페이지에서 전달한 주소를 받아서 로그인 후 이동하는 도구
+  //현재 비교페이지에서 전달한 주소를 받아서 로그인 후 에 이동하는 도구!
   const location = useLocation();
+
+  // location.state 페이지 이동할 때 전달받은 정보!
+  // ?.from 정보가 있으면 from 꺼내고 , 없으면 undefined
+  const 돌아갈주소 = location.state?.from || '/';
+
+  console.log('돌아갈 주소: ', 돌아갈주소);
 
   //로그인 하는 아이디와 패스워드를 저장하는 변수
   const [id, setId] = useState('');
@@ -33,11 +39,15 @@ export default function Login({ onLogin }) {
           return;
         }
 
-        onLogin(id);
+        return onLogin(id);
         //무조건 메인페이지로 이동을 하는게 아니라 기존에 있던
         // 위치를 기억을해서 돌아가거나 아니면 처음 로그인하면 그냥
         // 메인페이지로 가던! 둘중하는 하기?
-        navigate('/');
+        // useLocation?
+      })
+      .then(() => {
+        // 전달받은 주소로 이동!
+        navigate(돌아갈주소, { replace: true });
       })
       .catch((error) => {
         console.error('로그인 요청에 실패했습니다.', error);
