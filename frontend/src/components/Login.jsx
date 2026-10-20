@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import '../css/Login.css';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function Login({ onLogin }) {
   const [isSignUp, setIsSignUp] = useState(false);
   const navigate = useNavigate();
+
+  // 현재 비교페이지에서 전달한 주소를 받아서 로그인 후 이동하는 도구
+  const location = useLocation();
 
   //로그인 하는 아이디와 패스워드를 저장하는 변수
   const [id, setId] = useState('');

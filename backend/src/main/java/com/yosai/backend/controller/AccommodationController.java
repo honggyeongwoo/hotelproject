@@ -81,7 +81,6 @@ public class AccommodationController {
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginRequestDto data,
             HttpSession 세션) {
-        System.out.println("객체타입으로 한꺼번에 전달된다.: " + data);
         // 자바스크립트에서 객체 형식으로 서버에 보내준다.
         // url에 붙는게 아니라 body공간에 담겨서 숨겨져 오기 때문에
         // RequestBody 이용해서 꺼내야된다.
@@ -89,7 +88,7 @@ public class AccommodationController {
 
         boolean 로그인결과 = memberService.login(data);
 
-        if (로그인결과) {
+        if (!로그인결과) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body("아이디 또는 비밀번호가 올바르지 않습니다.");
         }
